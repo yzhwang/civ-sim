@@ -1,0 +1,139 @@
+function primitive.begin()
+{
+  game.showText("恭喜你进入了原始时代");
+  game.showText("你带着你的族人穿过白雪皑皑的冰原，水流湍急的大河，微耸入云的高山");
+  game.showText("漫长的岁月里，不断有人葬身在路上，这让你内心焦急");
+  game.showText("但你知道，直到找到让部落真正可以繁衍生息的土地前，你都不能停下脚步");
+  game.showText("现在呈现在眼前的，是一片沼泽地");
+  game.setBackground("swamp");
+
+  game.primitiveIceAge = 0;
+  game.primitiveMigrateCounter = 0;
+  game.population = 1000;
+  game.primitiveFire = false;
+  game.primitiveAgriculture = false;
+}
+
+function primitive.grandFilterCheck()
+{
+  game.primitiveIceAge += 1;
+
+  if (game.primitiveIceAge == 5)
+  {
+    game.showText("大过滤器：冰河时代降临");
+    game.setBackground("ice-age");
+    game.showText("永无止境的冬天来临，连呼出的水蒸气都被瞬间凝结，大片动植物死亡，这样的黑暗日子持续了数百年之久");
+    if (game.primitiveFire && game.primitiveAgriculture) {
+      changePopulation("数个世纪的严寒，让", -0.5);
+      game.showText("依靠生火取暖，和对农作物的培养，即使在恶劣的天气下，你的族群仍顽强的生存了下来");
+      game.showText("数百年过去了，每天清晨你站在悬崖边观看日出，俯视着大地");
+      game.showText("你脸上映衬着温暖的阳光，气温逐渐回升，万物也慢慢恢复了生机");
+      game.showText("你知道，慢慢长夜终将过去，一个新的时代即将来临，而你的人民也做好了准备迎接它");
+      game.showText("你的文明进入了【新古典时代】");
+      game.showText("恭喜你通关试玩版！");
+    } else if (game.primitiveFire) {
+      changePopulation("低温的袭击，让", -0.2);
+      game.showText("依靠生火取暖，你的人民挨过了低温的袭击");
+      game.showText("然而......");
+      changePopulation("严重的饥荒，让", -0.8);
+      game.showText("缺乏食物的稳定来源，让你的人民相继慢慢饿死");
+      game.showText("你的族人们因【冰河时代降临】而灭绝，游戏结束，你的文明进化到原始时代");
+    } else if (game.primitiveAgriculture) {
+      changePopulation("缺乏食物，让", -0.2);
+      game.showText("依靠着对农业技术的掌握，你们勉强挨过了饥荒");
+      game.showText("然而......");
+      changePopulation("低温的袭击，让", -0.8);
+      game.showText("缺乏取暖的办法，让你的人民忍受不了漫长的低温");
+      game.showText("迎接他们的是大规模的冻伤和死亡");
+      game.showText("你的族人们因【冰河时代降临】而灭绝，游戏结束，你的文明进化到原始时代");
+    } else {
+      changePopulation("低温的袭击，让", -0.5);
+      game.showText("缺乏取暖的办法，让你的人民忍受不了漫长的低温");
+      game.showText("迎接他们的是大规模的冻伤和死亡");
+      game.showText("同时......");
+      changePopulation("严重的饥荒，让", -0.5);
+      game.showText("缺乏食物的稳定来源，让你的人民相继慢慢饿死");
+      game.showText("你的族人们因【冰河时代降临】而灭绝，游戏结束，你的文明进化到原始时代");
+    }
+    game.gameOver();
+  }
+}
+
+function primitive.migrate.run()
+{
+  game.primitiveMigrateCounter += 1;
+  if (game.primitiveMigrateCounter == 1) {
+    game.showText("显然，贫瘠的沼泽地不是理想的栖息地，你带着族人很快开始新的征途");
+    game.setBackground("forest");
+    game.showText("你们来到了一片森林，这里物产丰富，然而林中也隐藏着无尽的危险");
+    game.showText("你大手一挥，部落沿着森林边际驻扎了下来");
+  } else if (game.primitiveMigrateCounter == 2) {
+    game.showText("森林给你提供了丰富的物产，然而各种猛兽的侵袭也让你寝食难安");
+    game.showText("思前想后，你决定带着部族继续向南移动，开始了新的旅程");
+    game.setBackground("flat");
+    game.showText("经过几十年的跋涉，你们终于走到了一片有河流的平原上");
+    game.showText("这里一马平川，风景优美，你有种预感，这里会是理想的居所");
+  } else if (game.primitiveMigrateCounter == 3) {
+    game.showText("不知什么原因，你决定继续启程向南出发");
+    game.showText("你们最终走到了陆地的尽头，第一次见到了广阔的海洋");
+    game.setBackground("ocean");
+    game.showText("温暖的气候，丰富的鱼类，让你的人民可以在接下来上千年时间里安居乐业");
+  } else if (game.primitiveMigrateCounter == 4) {
+    game.showText("你决定继续启程，最终你回到了原点，那片沼泽地");
+    game.setBackground("swamp");
+    game.primitiveMigrateCounter = 0;
+  }
+  changePopulation("大规模的人口迁徙，让", -0.05);
+}
+
+function changePopulation(reason, rate)
+{
+  people = game.population * rate;
+  game.population *= 1 + rate;
+  if (people > 0) {
+    verb = "增加";
+  } else {
+    verb = "减少";
+  }
+  game.showText(reason + "你的族群" + verb + "了" + people + "人，现在有" + game.population + "人");
+}
+
+function primitive.exploreNearby.run()
+{
+  if (game.primitiveMigrateCounter == 0) {
+    game.showText("沼泽里布满了各种苔藓和低矮的灌木丛，时不时还能见到鸟类和蛇");
+    game.showText("他们都提供了丰富的蛋白质，有了稳定的食物，你的族群开始增长");
+    game.showText("但沼泽还是会经常吞没那些不熟悉地形的年轻人，为此你感到头疼");
+    changePopulation("获得了食物，", 0.05);
+  } else if (game.primitiveMigrateCounter == 1) {
+    game.showText("一个雷雨交加的夜晚，雷电劈中了森林，整个森林开始燃起熊熊大火");
+    game.showText("你打算怎么办？");
+    checkout = game.select("赶快撤退！", "进去看看。。。");
+    if (checkout == 0) {
+      game.showText("你在第一时间组织起人员撤离，保全了性命，你的事迹得到了整个部族的赞颂");
+    } else {
+      game.showText("这团炽热的犹如魔鬼舞蹈的红光令你着迷，你决定带人进去看看");
+      game.showText("很多勇敢的青年跟随你进去，然而只有你一个人运气好逃了出来");
+      game.showText("这次历险虽然让你受了重伤，但你也发现了燃烧的秘密，历史被静悄悄的改变着");
+      game.showText("你的文明学会了使用【火】");
+      changePopulation("因为火灾，", -0.10);
+
+      game.primitiveFire = true;
+    }
+  } else if (game.primitiveMigrateCounter == 2) {
+    game.showText("你带领人民在这片肥沃的土地上休养生息");
+    game.showText("在漫长的观察中，你渐渐发现了植物生长的奥秘，并开始大规模的种植");
+    game.showText("粮食的稳定供应，让你的部落开始欣欣向荣的发展起来");
+    game.showText("你的文明学会了【农业】");
+    changePopulation("通过掌握农业科技", 0.50);
+
+    game.primitiveAgriculture = true;
+  } else if (game.primitiveMigrateCounter == 3) {
+    game.showText("海边的生活是惬意的，你的人民充满了创造力");
+    game.showText("他们将你和部族里英雄们的故事收集编纂，添油加醋，慢慢的形成了诸多神话故事");
+    game.showText("他们甚至还发明了一种叫音乐的东西，一边演奏一边载歌载舞");
+    game.showText("你的文明开始在人类的舞台上闪耀");
+    changePopulation("丰富的渔业资源，让", 0.30);
+  }
+
+}

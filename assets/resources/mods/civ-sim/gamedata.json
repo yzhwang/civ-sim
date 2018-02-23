@@ -1,0 +1,27 @@
+{
+  "initialAgeId": "primitive",
+  "ages": {
+    "primitive": {
+      "title": "原始时代",
+      "timestamps": [
+        "公元前100万年",
+        "公元前50万年",
+        "公元前20万年",
+        "公元前10万年",
+        "公元前5万年"
+      ],
+      "events": {
+        "migrate" : {
+          "title": "继续迁徙",
+          "active": true,
+          "iconId": "icon-196"
+        },
+        "exploreNearby": {
+          "title": "探索附近",
+          "active": true,
+          "iconId": "icon-187"
+        }
+      }
+    }
+  }
+}
